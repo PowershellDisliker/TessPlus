@@ -13,13 +13,15 @@ typedef struct PlayerPieces {
 
 // Helper Definitions
 static void _loadStandardStartingChessBoard(EngineState*);
+static bool _isMoveEqual(ChessMove, ChessMove);
+static ChessMoveResponse _getMoves(EngineState*, PlayerColor);
 
-static ChessMoveResponse _getKingMoves(PlayerPieces);
-static ChessMoveResponse _getQueenMoves(PlayerPieces);
-static ChessMoveResponse _getRookMoves(PlayerPieces);
-static ChessMoveResponse _getKnightMoves(PlayerPieces);
-static ChessMoveResponse _getBishopMoves(PlayerPieces);
-static ChessMoveResponse _getPawnMoves(PlayerPieces);
+static ChessMoveResponse __getKingMoves(PlayerPieces);
+static ChessMoveResponse __getQueenMoves(PlayerPieces);
+static ChessMoveResponse __getRookMoves(PlayerPieces);
+static ChessMoveResponse __getKnightMoves(PlayerPieces);
+static ChessMoveResponse __getBishopMoves(PlayerPieces);
+static ChessMoveResponse __getPawnMoves(PlayerPieces);
 
 static ChessMoveResponse __combineChessMoveResponses(ChessMoveResponse, ChessMoveResponse);
 static PlayerPieces __getPlayerPieces(EngineState*, PlayerColor);
@@ -42,12 +44,12 @@ void destroyChessMoveResponse(ChessMoveResponse response) {
 ChessMoveResponse getMoves(EngineState* state) {
     PlayerPieces playerPieces = __getPlayerPieces(state, state->currentPlayer);
 
-    ChessMoveResponse kingMoves = _getKingMoves(playerPieces);
-    ChessMoveResponse queenMoves = _getQueenMoves(playerPieces);
-    ChessMoveResponse rookMoves = _getRookMoves(playerPieces);
-    ChessMoveResponse knightMoves = _getKnightMoves(playerPieces);
-    ChessMoveResponse bishopMoves = _getBishopMoves(playerPieces);
-    ChessMoveResponse pawnMoves = _getPawnMoves(playerPieces);
+    ChessMoveResponse kingMoves =   __getKingMoves(playerPieces);
+    ChessMoveResponse queenMoves =  __getQueenMoves(playerPieces);
+    ChessMoveResponse rookMoves =   __getRookMoves(playerPieces);
+    ChessMoveResponse knightMoves = __getKnightMoves(playerPieces);
+    ChessMoveResponse bishopMoves = __getBishopMoves(playerPieces);
+    ChessMoveResponse pawnMoves =   __getPawnMoves(playerPieces);
 
     ChessMoveResponse groupA = __combineChessMoveResponses(kingMoves, queenMoves);
     ChessMoveResponse groupB = __combineChessMoveResponses(rookMoves, knightMoves);
@@ -58,8 +60,8 @@ ChessMoveResponse getMoves(EngineState* state) {
     return __combineChessMoveResponses(groupC, groupD);
 }
 
-bool makeMove(EngineState*, ChessMove) {
-
+bool makeMove(EngineState* state, ChessMove move) {
+    ChessMoveResponse availableMoves = 
 }
 
 bool undoMove(EngineState*) {
@@ -71,27 +73,27 @@ BoardState getBoardState(EngineState*) {
 }
 
 // Helpers
-static ChessMoveResponse _getKingMoves(PlayerPieces) {
+static ChessMoveResponse __getKingMoves(PlayerPieces) {
 
 }
 
-static ChessMoveResponse _getQueenMoves(PlayerPieces) {
+static ChessMoveResponse __getQueenMoves(PlayerPieces) {
 
 }
 
-static ChessMoveResponse _getRookMoves(PlayerPieces) {
+static ChessMoveResponse __getRookMoves(PlayerPieces) {
 
 }
 
-static ChessMoveResponse _getKnightMoves(PlayerPieces) {
+static ChessMoveResponse __getKnightMoves(PlayerPieces) {
 
 }
 
-static ChessMoveResponse _getBishopMoves(PlayerPieces) {
+static ChessMoveResponse __getBishopMoves(PlayerPieces) {
 
 }
 
-static ChessMoveResponse _getPawnMoves(PlayerPieces) {
+static ChessMoveResponse __getPawnMoves(PlayerPieces) {
 
 }
 
