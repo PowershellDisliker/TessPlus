@@ -41,6 +41,7 @@ typedef enum ChessPiece {
     BLACK_KNIGHT,
     BLACK_BISHOP,
     BLACK_PAWN,
+    EMPTY,
 } ChessPiece;
 
 typedef enum PlayerColor {
@@ -81,9 +82,17 @@ typedef struct BitBoards {
     uint64_t blackPawns;
 } BitBoards;
 
+typedef struct ChessFlags {
+    bool whiteCanCastle;
+    bool blackCanCastle;
+
+
+} ChessFlags;
+
 typedef struct EngineState {
     PlayerColor currentPlayer;
     BitBoards bitBoard;
+    ChessFlags flags;
     size_t maximumMoveCount;
     size_t moveCount;
     ChessMove* moves;
@@ -93,6 +102,12 @@ typedef struct BoardState {
     ChessPiece squares[64];
 } BoardState;
 
+typedef struct EngineResponse {
+    bool success;
+    bool winnerExists;
+    PlayerColor winner;
+} EngineResponse;
+
 // Memory
 void initializeEngineState(EngineState*, const size_t);
 void destroyEngineState(EngineState*);
@@ -101,6 +116,6 @@ void destroyChessMoveResponse(ChessMoveResponse);
 
 // Logic
 ChessMoveResponse getMoves(EngineState*);
-bool makeMove(EngineState*, ChessMove);
-bool undoMove(EngineState*);
-BoardState getBoardState(EngineState*);
+EngineResponse makeMove(EngineState*, ChessMove);
+EngineResponse undoMove(EngineState*);
+void getBoardState(EngineState*, BoardState*);
