@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_MOVABLE_PIECES_PER_TURN 2
-
 typedef enum ChessRank {
     RANK_A,
     RANK_B,
@@ -28,21 +26,15 @@ typedef enum ChessFile {
     FILE_8,
 } ChessFile;
 
-typedef enum ChessPiece {
-    WHITE_KING,
-    WHITE_QUEEN,
-    WHITE_ROOK,
-    WHITE_KNIGHT,
-    WHITE_BISHOP,
-    WHITE_PAWN,
-    BLACK_KING,
-    BLACK_QUEEN,
-    BLACK_ROOK,
-    BLACK_KNIGHT,
-    BLACK_BISHOP,
-    BLACK_PAWN,
+typedef enum PieceType {
+    KING,
+    QUEEN,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    PAWN,
     EMPTY,
-} ChessPiece;
+} PieceType;
 
 typedef enum PlayerColor {
     WHITE,
@@ -54,11 +46,25 @@ typedef struct ChessSquare {
     ChessFile file;
 } ChessSquare;
 
-typedef struct ChessMove {
-    size_t totalPiecesMoved;
+typedef struct ChessPiece {
+    PieceType type;
+    PlayerColor color;
+} ChessPiece;
 
-    ChessSquare from[MAX_MOVABLE_PIECES_PER_TURN];
-    ChessSquare to[MAX_MOVABLE_PIECES_PER_TURN];
+typedef struct ChessMove {
+    ChessSquare from;
+    ChessSquare to;
+
+    ChessPiece movedPieceType;
+
+    bool isCastling;
+    ChessSquare castlingRookFrom;
+    ChessSquare castlingRookTo;
+    ChessPiece castlingPieceType;
+
+    bool isTakingPiece;
+    ChessPiece takenPiece;
+    ChessSquare takenPiecePosition;
 } ChessMove;
 
 typedef struct ChessMoveResponse {
@@ -83,23 +89,27 @@ typedef struct BitBoards {
 } BitBoards;
 
 typedef struct ChessFlags {
-    bool whiteCanCastle;
-    bool blackCanCastle;
-
-
+    bool whiteCanCastleKingSide;
+    bool whiteCanCastleQueenSide;
+    bool blackCanCastleKingSide;
+    bool blackCanCastleQueenSide;
 } ChessFlags;
 
 typedef struct EngineState {
     PlayerColor currentPlayer;
+    ChessMoveResponse currentPlayerAvailableMoves;
+    ChessMoveResponse otherPlayersAttackedSquares;
+
     BitBoards bitBoard;
     ChessFlags flags;
+    
     size_t maximumMoveCount;
     size_t moveCount;
     ChessMove* moves;
 } EngineState;
 
 typedef struct BoardState {
-    ChessPiece squares[64];
+    PieceType types[64];
 } BoardState;
 
 typedef struct EngineResponse {
@@ -110,9 +120,9 @@ typedef struct EngineResponse {
 
 // Memory
 void initializeEngineState(EngineState*, const size_t);
-void destroyEngineState(EngineState*);
+void freeEngineState(EngineState*);
 
-void destroyChessMoveResponse(ChessMoveResponse);
+void freeChessMoveResponse(ChessMoveResponse);
 
 // Logic
 ChessMoveResponse getMoves(EngineState*);
